@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>		
+<head>
+    <title>Assignment 4</title>
+    <style type="text/css">
+        #javascriptoutline
+       
+        #buttons {
+            width: 200px;
+            height: 100px;
+            font-size: 22pt
+        }
+        #question
+        {
+            margin: 10px;
+            padding:10px;
+            outline-color:red;
+            outline-width:1px;
+            outline-style:dashed;
+            font-size:24px;
+        }
+		#score{
+		 font-size: 30px;
+		}
+		
+        #guess{
+            font-size: 30px;
+        }
+		
+		#countdown{
+			width:90px;
+            font-size: 20pt;
+            }
+		
+    </style>
+    <script type="text/javascript">
+        //var questions = new Array();
+       var questions = ['red', 'green', 'black', 'white', 'yellow', 'orange', 'blue', 'pink', 'brown', 'purple'];
+        var j = 0;
+		var question2;
+		var timerID;
+		var countdownID;
+		var scrambleButton = document.getElementById("scrambler");
+		var time = 10000;
+		var cancel = document.getElementById("scrambler");
+
+		
+
+
+
+		
+        function randomize()
+        {
+            let tempArray=new Array()
+            let rand;
+			let num=questions.length;
+
+            for (var i = 0; i < num; i++) {
+				do{
+                rand = Math.trunc(Math.random() * questions.length);
+				}
+				while(questions[rand]===null);
+                tempArray[i] = questions[rand];
+                questions[rand]=null;
+            }
+            questions = tempArray;
+			console.log(questions);
+        }
+        function scrambler() {
+			clearTimeout(timerID);
+            clearTimeout(countdownID);
+            document.getElementById("in").value="";
+            document.getElementById("score").innerHTML="";
+			var question = questions[j];
+			question2=question;
+            if (j === question.length) {
+                j = 0;
+            }
+            
+            var scrambled;
+            let tempQuestion="";
+			let rand;
+            let temp;
+            j++;
+			
+			let leng=question.length
+            for (var l = 0; l < leng; l++) {
+				
+				rand=Math.trunc(Math.random()*question.length);
+				temp=question.charAt(rand);
+				console.log(temp);
+                tempQuestion = tempQuestion + question.charAt(rand);
+				
+				question=question.substring(0,rand)+question.substring(rand+1)
+				
+            }
+            scrambled = tempQuestion;
+            document.getElementById("question1").innerHTML = scrambled;
+           
+            timer();
+            scrambleButton.disable();
+
+
+        }
+		
+		function timer() {
+		let s;
+            timerID=setTimeout(function(){checkAnswer()},time);
+
+            s=Math.floor(time/1000);
+            countdown(s);
+
+
+		
+		}
+		
+		function countdown(s) {
+		let sec=s;
+
+            document.getElementById("countdown").innerHTML=sec;
+            sec=sec-1;
+            if(sec>=0)
+            {
+                countdownID=setTimeout(function(){countdown(sec)},1000);
+            }
+            else
+            {
+                document.getElementyById("countdown").innerHTML=0;
+            }
+            scrambleButton.enable();
+
+
+
+
+		}
+		
+		
+        function checkAnswer() {
+          if (document.getElementById("in").value == question2) {
+                document.getElementById("score").innerHTML = "Correct";
+                if(time>500)
+                {
+                    time=time-250;
+                }
+            }
+            else {
+                if(parseInt(document.getElementById("countdown").innerText)==0)
+                {
+                    document.getElementById("score").innerHTML="Incorrect - Time ran out."
+                }
+                else
+                    document.getElementById("score").innerHTML = "Incorrect";
+                time=time+500
+            }
+
+
+
+
+        }
+
+
+
+    </script>
+</head>
+
+<body>
+    <center>
+        <h1>Assignment 4</h1>
+        <h2>Javascript Part 2</h2>
+    </center>
+    <p>Adds a timer using web workers from Assignment 3</p>
+		
+    <p>
+	Here is a link to
+	<a href="/~odendahl/coursework/isc250/201809/assignments/03.html">
+	the original assignment</a></p>
+	
+    <div id="javascriptoutline">
+        <button id="b"name="Randomizer" onclick="randomize()">
+            Randomize List
+        </button>
+        <button id="b" name="Scrambler" onclick="scrambler()">
+            Scramble Word
+        </button>
+		</span>
+            <span id="countdown">
+
+            </span>
+
+
+    
+    <p id="question1">
+	
+	</p>
+        What is the word?<br />
+        <input id="in" type="text" name="answer" value="" />
+        <button name="submit" onclick="checkAnswer()">
+		Submit
+		</button>
+    <p id="score">
+
+    </p>
+	</div>
+</body>
+</html>
